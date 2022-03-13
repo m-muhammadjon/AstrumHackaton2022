@@ -1,0 +1,90 @@
+@import "./navbar.css";
+@import "./login.css";
+@import "./profile.css";
+@import "./quiz.css";
+@import "./doctors.css";
+@import "./footer.css";
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Poppins&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none !important;
+    font-family: 'Lato', sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    margin: 0;
+    background-color: white;
+}
+
+.message {
+    background-color: limegreen;
+    color: white;
+    width: 100%;
+    padding: 2px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    z-index: 99999;
+}
+
+.mt-10 {
+    margin-top: 100px !important;
+}
+
+.btn-red {
+    background-color: #E01A1A;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 25px;
+}
+
+.btn-green {
+    background-color: limegreen!important;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 25px;
+}
+
+.btn-red:hover {
+    color: #fff;
+}
+
+.btn-green:hover{
+    color: #fff!important;
+}
+
+.form__button:hover{
+    color: #fff!important;
+}
+
+.my-container {
+    width: 85%;
+    margin: 0 auto;
+}
+
+.red-text {
+    color: #E01A1A;
+}
+
+.my-container {
+    width: 85%;
+    margin: 0 auto;
+}
+
+.join-diagnos {
+    margin: 50px auto;
+    padding: 50px 0;
+    width: 80%;
+}
+
+.join-diagnos a {
+    margin-left: 55%;
+}
+
+.errorlist{
+    margin-left: 20px;
+}

@@ -1,0 +1,244 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleHealth | Sog'lig'ingiz g'amxo'ri</title>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'assets/styles/style.css' %}">
+</head>
+<body>
+{% include 'messages.html' %}
+
+<header>
+    <a href="/" class="site-logo" aria-label="homepage">Tele<span class="red-text">ON</span> </a>
+    {% include 'navbar.html' %}
+</header>
+
+<div class="mycontainer quizs mt-10">
+    <div class="quiz-box">
+        <div id="quiz">
+            <h1 class="text-center my-4" style="border-bottom: 1px solid #333; padding: 15px;">Savol</h1>
+            <h4 id="question" style="margin: 50px 0;"></h4>
+            <div class="buttons">
+
+                <button class="btn yes_btn" id="btn0"><span id="choice0"></span></button>
+                <button class="btn no_btn" id="btn1"><span id="choice1"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+    function Quiz(questions) {
+        this.questions = questions;
+        this.questionIndex = 0;
+    }
+
+    let ans = []
+
+    let questions = [
+        new Question(
+            "Sizning istimangiz chiqayaptimi(ya'ni 38'C dan yuqorimi) ?",
+
+            ["Ha", "Yo'q"],
+            "1"
+        ),
+        new Question(
+            "Sizni yo'tal bezovta qilayaptimi? ",
+            ["Ha", "Yo'q"],
+            "2"
+        ),
+        new Question(
+            "Sizni o'zingizni xolsiz his qilayapsizmi?",
+            ["Ha", "Yo'q"],
+            "3"
+        ),
+        new Question(
+            "Sizning ko'ngliz ayniyaptimi?",
+            ["Ha", "Yo'q"],
+            "4"
+        ),
+        new Question(
+            "Siz ta'm sezish qobilyatini yo'qotdingizmi?",
+            ["Ha", "Yo'q"],
+            "5"
+        )
+    ];
+
+    Quiz.prototype.getQuestionIndex = function () {
+        return this.questions[this.questionIndex];
+    }
+
+    let ques = []
+    let answers = []
+    let id = []
+
+    let k = 0;
+    let j = 0;
+
+    Quiz.prototype.guess = function (answer) {
+
+
+        answers.push(answer);
+
+
+        this.questionIndex++;
+    }
+
+
+    Quiz.prototype.isEnded = function () {
+        return this.questionIndex === this.questions.length;
+    }
+
+
+    function Question(text, choices, answer) {
+        this.text = text;
+        this.choices = choices;
+        this.answer = answer;
+    }
+
+    function displayQuestion() {
+
+        if (quiz.isEnded()) {
+            showScores();
+
+        } else {
+            let questionElement = document.getElementById("question");
+            questionElement.innerHTML = quiz.getQuestionIndex().text;
+            let choices = quiz.getQuestionIndex().choices;
+            for (let i = 0; i < choices.length; i++) {
+                let choiceElement = document.getElementById("choice" + i);
+                choiceElement.innerHTML = choices[i];
+                guess("btn" + i, choices[i]);
+            }
+
+            showProgress();
+        }
+
+    };
+
+    function guess(id, guess) {
+        let button = document.getElementById(id);
+        button.onclick = function () {
+            quiz.guess(guess);
+            displayQuestion();
+        }
+    };
+
+
+    function showProgress() {
+        let currentQuestionNumber = quiz.questionIndex + 1;
+    };
+    function alertApp(){
+        alert("Hozirgi vaqtda dasturimiz ishga tushmagan, uzur");
+    }
+
+    function showScores() {
+        // for(let i = 0; i < ans.length; i++){
+        //     console.log(ans[i] + " ")
+        // }
+        for (let i = 0; i < questions.length; i++) {
+            ques.push(questions[i].text);
+            id.push(questions[i].answer);
+        }
+        for (let i = 0; i < questions.length * 2; i++) {
+            if (i % 2 == 0) {
+                ans.push(id[k]);
+                k++;
+            } else {
+                ans.push(answers[j]);
+                j++;
+            }
+        }
+
+        let m = 1;
+        let cnt_yes = 0;
+        let cnt_no = 0;
+        for (let i = 1; i < ans.length; i += 2) {
+            if (ans[i] == "Ha") {
+                cnt_yes++;
+            } else {
+                cnt_no++;
+            }
+        }
+
+        console.log(ans)
+        fetch("/submission-create/", {
+            body: JSON.stringify(ans),
+            method: "POST",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+            })
+
+
+        {#$(document).ready(function () {#}
+        {##}
+        {#    $.post('/submission-create/', {#}
+        {#            data: ans#}
+        {#        },#}
+        {#        function (data) {#}
+        {#            if (data['status'] == 'ok') {#}
+        {#                console.log('ok')#}
+        {#            } else {#}
+        {#                console.log('error')#}
+        {#            }#}
+        {##}
+        {#        })#}
+        //})
+        let diagnos = "";
+        if (cnt_yes == ans.length / 2) {
+            diagnos = "90% Covid";
+        } else if (cnt_no == ans.length / 2) {
+            diagnos = "Sog'lom"
+        } else {
+            if (cnt_yes == 1) {
+                diagnos = "Shamollash";
+            } else {
+                diagnos = `${cnt_yes * 20}% Covid`
+            }
+
+        }
+        console.log(ans)
+
+        let quizEndHTML =
+            `
+    <h4 class="success-txt">Siz so'rovnomani muvaffaqiyatli yakuladingiz</h4>
+
+    <h5 id='score'> Sizning tashxis: ${diagnos}</h5>
+
+    <a href="{% url 'account:profile' request.user.username %}" class="btn form__button mt-5" value="Profile">Profile</a>
+
+    `;
+        let quizElement = document.getElementById("quiz");
+        quizElement.innerHTML = quizEndHTML;
+
+    }
+    ;
+
+
+    // questions.forEach((answer) => {
+    //     console.log(answer.choice);
+    //     let quizAnswers = document.getElementById("quiz-answers");
+    //     // quizAnswers.innerHTML = questions.text;
+    // })
+
+    let quiz = new Quiz(questions);
+    displayQuestion();
+
+
+</script>
+</body>
+</html>

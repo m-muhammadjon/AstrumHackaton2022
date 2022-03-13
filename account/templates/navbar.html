@@ -1,0 +1,34 @@
+<nav class="main-nav">
+    <ul class="nav__list">
+        <li class="nav__list-item"><a href="/" class="nav__link">Bosh sahifa</a></li>
+        <li class="nav__list-item">
+            <a href="#" class="nav__link" onclick="alertApp()">Dastur</a>
+        </li>
+        <li class="nav__list-item">
+            <a href="{% url 'account:home_page' %}#contact" class="nav__link">Bog'lanish</a>
+        </li>
+    </ul>
+</nav>
+<nav class="account">
+    <ul class="nav__list">
+        {% if not request.user.is_authenticated %}
+            <li class="nav__list-item">
+                <a class="btn-red" href="{% url 'account:user_login' %}">Tizimga kirish</a>
+            </li>
+        {% else %}
+            <li class="nav__list-item">
+                <div class="dropdown">
+                    <button class="btn form__button dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ request.user.username }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="{% url 'account:profile' request.user.username %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'account:doctors' %}">Doktorlar</a>
+                        <a class="dropdown-item" href="{% url 'account:user_logout' %}">Chiqish</a>
+                    </div>
+                </div>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
